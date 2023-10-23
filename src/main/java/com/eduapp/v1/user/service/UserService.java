@@ -3,7 +3,6 @@ package com.eduapp.v1.user.service;
 import com.eduapp.v1.user.entities.User;
 import com.eduapp.v1.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,13 +11,19 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Qualifier("IUserRepository")
-    @Autowired
     private IUserRepository userRepository;
+
+    @Autowired
+    public UserService(IUserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // Create new User
     public User createUser(User user) {
-        // we will change this to return an access token instead of the password
+        return userRepository.save(user);
+    }
+
+    public User updateUser(User user) {
         return userRepository.save(user);
     }
 
@@ -29,7 +34,13 @@ public class UserService {
 
     // Get User by ID
     public Optional<User> getUserById(Long userId) {
-        return userRepository.findById(userId);
+        try{
+            return userRepository.findById(userId);
+        }catch(Exception ex){
+            System.out.println("user does not exists"  );
+            ex.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     // Update User
@@ -48,13 +59,13 @@ public class UserService {
     }
 
     // Delete User by ID
-    public String deleteUserById(Long id) {
+    public boolean deleteUserById(Long id) {
         try {
-
             userRepository.deleteById(id);
-            return "User with Id=" + id + " deleted successfully";
+            return true;
         } catch (Exception e) {
-            return "User with id does not exists";
+            e.printStackTrace();
+            return false;
         }
     }
 

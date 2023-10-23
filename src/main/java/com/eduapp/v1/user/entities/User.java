@@ -1,14 +1,16 @@
 package com.eduapp.v1.user.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 
 
 @Entity
-@Table(name = "users")
+@Table(schema = "edu_schema", name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class User implements Serializable {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +18,11 @@ public class User implements Serializable {
 
     private String firstName;
     private String lastName;
+    @NotBlank
     private String email;
+
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public User(String firstName, String lastName, String email, String password) {
@@ -29,6 +35,9 @@ public class User implements Serializable {
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+    }
+
+    public User() {
     }
 
     public String getFirstName() {
@@ -55,6 +64,7 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -63,6 +73,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    @JsonProperty("user_id")
     public Long getId() {
         return id;
     }
