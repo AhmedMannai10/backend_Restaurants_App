@@ -2,6 +2,9 @@ package com.eduapp.v1.user.controller;
 
 import com.eduapp.v1.user.entities.User;
 import com.eduapp.v1.user.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +24,7 @@ public class UserController {
 
     // Create a User
     @PostMapping
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody @Valid User user) {
         return userService.createUser(user);
     }
 

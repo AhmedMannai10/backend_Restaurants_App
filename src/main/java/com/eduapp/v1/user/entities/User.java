@@ -3,6 +3,7 @@ package com.eduapp.v1.user.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
@@ -18,10 +19,14 @@ public class User implements Serializable {
 
     private String firstName;
     private String lastName;
-    @NotBlank
+
+// @Email verify for email regex
+// @NotBlank does not allow even null 
+    @NotBlank(message = "email must not be empty")
+    @Email
     private String email;
 
-
+    @NotBlank(message = "password must not be empty")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

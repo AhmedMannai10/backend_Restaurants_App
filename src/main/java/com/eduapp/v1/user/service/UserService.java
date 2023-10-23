@@ -4,6 +4,7 @@ import com.eduapp.v1.user.entities.User;
 import com.eduapp.v1.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.eduapp.v1.exceptions.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +37,7 @@ public class UserService {
     public Optional<User> getUserById(Long userId) {
         try{
             return userRepository.findById(userId);
-        }catch(Exception ex){
-            System.out.println("user does not exists"  );
+        }catch(NotFoundException ex){
             ex.printStackTrace();
             return Optional.empty();
         }
