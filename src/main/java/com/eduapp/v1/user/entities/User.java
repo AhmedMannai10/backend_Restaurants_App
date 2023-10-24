@@ -1,17 +1,29 @@
 package com.eduapp.v1.user.entities;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-import java.io.Serializable;
-
-
 @Entity
-@Table(schema = "edu_schema", name = "users", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
-public class User implements Serializable {
+@Table(schema = "edu_schema", name = "user", uniqueConstraints = @UniqueConstraint(columnNames = { "email" }))
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +32,8 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
 
-// @Email verify for email regex
-// @NotBlank does not allow even null 
+    // @Email verify for email regex
+    // @NotBlank does not allow even null
     @NotBlank(message = "email must not be empty")
     @Email
     private String email;
@@ -29,6 +41,10 @@ public class User implements Serializable {
     @NotBlank(message = "password must not be empty")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
@@ -98,5 +114,34 @@ public class User implements Serializable {
                 '}';
     }
 
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+	}
+
+	@Override
+	public String getUsername() {
+        return email;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+        return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+        return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+        return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+        return true;
+	}
 
 }

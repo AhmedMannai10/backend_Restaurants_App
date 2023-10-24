@@ -33,19 +33,28 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public Optional<User> getUserByEmail(String email){
+        try{
+            return userRepository.findByEmail(email);
+        }catch(NotFoundException ex){
+            throw new ApiRequestException("user with email(" + email +") does not exist");
+        }
+    }
+
     // Get User by ID
     public Optional<User> getUserById(Long userId) {
         try{
             return userRepository.findById(userId);
         }catch(NotFoundException ex){
-            ex.printStackTrace();
-            return Optional.empty();
+            throw new ApiRequestException("User with Id(" 
+                        + userId + 
+                        ") does not exist ");
         }
     }
 
     // Update User
-    public User updateUser(Long id, User userDetails) {
-        Optional<User> user = userRepository.findById(id);
+    public User updateUser(String email, User userDetails) {
+        Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
             User existingUser = user.get();
             existingUser.setFirstName(userDetails.getFirstName());
@@ -54,8 +63,9 @@ public class UserService {
 
 
             return userRepository.save(existingUser);
+        }else{
+            throw new ApiRequestException("User Does not exist");
         }
-        return null;
     }
 
     // Delete User by ID
@@ -64,8 +74,7 @@ public class UserService {
             userRepository.deleteById(id);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            throw new ApiRequestException("User does not exist");
         }
     }
 
