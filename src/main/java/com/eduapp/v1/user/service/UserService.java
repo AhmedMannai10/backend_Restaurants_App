@@ -3,6 +3,9 @@ package com.eduapp.v1.user.service;
 import com.eduapp.v1.user.entities.User;
 import com.eduapp.v1.user.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import com.eduapp.v1.exceptions.*;
 
@@ -10,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements IUserDetailsService{
 
     private IUserRepository userRepository;
 
@@ -77,5 +80,28 @@ public class UserService {
             throw new ApiRequestException("User does not exist");
         }
     }
+
+	@Override
+	public UserDetailsService userDetailsService() {
+        UserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+        userDetailsManager.createUser(
+            org.springframework.security.core.userdetails.User.builder()
+                .username("ghost")
+                .password("secret")
+                .roles("USER")
+                .build()
+        );
+        userDetailsManager.createUser(
+            org.springframework.security.core.userdetails.User.builder()
+                .username("cyber")
+                .password("cyber")
+                .roles("ADMIN")
+                .build()
+        );
+
+        return userDetailsManager;
+
+	}
+
 
 }

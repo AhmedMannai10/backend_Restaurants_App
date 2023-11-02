@@ -14,19 +14,38 @@ import jakarta.validation.constraints.NotNull;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    public JwtAuthenticationFilter() {
-
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'doFilterInternal'");
     }
 
-	@Override
-	protected void doFilterInternal(
-                @NotNull HttpServletRequest request, 
-                @NotNull HttpServletResponse response, 
-                @NotNull FilterChain filterChain
-    )throws ServletException, IOException {
+    // private final JwtService jwtService;
 
-	}
+    // public JwtAuthenticationFilter(JwtService jwtService) {
+    // this.jwtService = jwtService;
+    // }
 
+    // @Override
+    // protected void doFilterInternal(
+    // @NotNull HttpServletRequest request,
+    // @NotNull HttpServletResponse response,
+    // @NotNull FilterChain filterChain
+    // )throws ServletException, IOException {
+    // final String authHeader = request.getHeader("Authorization");
+    // final String jwtToken;
+    // final String userEmail;
+
+    // if(authHeader == null || !authHeader.startsWith("Bearer ")){
+    // filterChain.doFilter(request, response);
+    // return;
+    // }
+
+    // // starte getting the token after "bearer "
+    // // ^7
+    // jwtToken = authHeader.substring(7);
+    // userEmail = jwtService.(jwtToken);// extract userEmail from jwt token;
+    // }
 
 }
-
